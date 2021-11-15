@@ -9,6 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class ReportOrderSummaryCommand extends Command
 {
@@ -32,12 +33,12 @@ class ReportOrderSummaryCommand extends Command
     {
         $sourcePath = $input->getArgument("source");
         $resultPath = $input->getArgument("result");
-        if (!is_file($sourcePath)) {
-            $output->writeln("source file in ${sourcePath} not exists");
-            return Command::FAILURE;
-        }
 
-        $this->summaryService->generate($sourcePath, $resultPath);
+        try {
+            $this->summaryService->generate($sourcePath, $resultPath);
+        } catch (ResourceNotFoundException $e) {
+            $output->writeln("resource or file not found");
+        }
 
         return Command::SUCCESS;
     }

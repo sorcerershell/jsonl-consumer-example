@@ -7,6 +7,7 @@ use App\Report\OrderSummary\Mapper\OrderMapper;
 use App\Report\OrderSummary\Processor;
 use App\Report\OrderSummary\Processor\OrderSummaryPipeline;
 use JsonCollectionParser\Parser;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class OrderStreamReader
 {
@@ -21,6 +22,10 @@ class OrderStreamReader
      * @throws \Exception
      */
     public function parse($input, callable $callback) {
-        $this->jsonParser->parse($input, $callback);
+        @$stream = fopen($input, "r");
+        if (!$stream) {
+            throw new ResourceNotFoundException();
+        }
+        $this->jsonParser->parse($stream, $callback);
     }
 }
