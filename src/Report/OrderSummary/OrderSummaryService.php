@@ -35,6 +35,9 @@ class OrderSummaryService
     {
         $this->jsonReader->parse($uri, function (array $item) use (&$items, $outputPath, $type) {
             $summary = $this->processLine($item);
+            if ($summary->getTotalOrderValue() == 0) {
+                return;
+            }
             $this->reportWriter->write($summary, $outputPath, $type);
         });
     }

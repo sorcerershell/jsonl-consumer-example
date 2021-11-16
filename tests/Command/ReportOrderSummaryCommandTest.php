@@ -19,7 +19,7 @@ class ReportOrderSummaryCommandTest extends KernelTestCase
         $commandTester = new CommandTester($command);
 
         $source = $kernel->getProjectDir() . '/tests/Fixtures/dummy.jsonl';
-        $destinationPath = "output.csv";
+        $destinationPath = $kernel->getCacheDir() . "/output.csv";
 
         $commandTester->execute([
             'source' => $source,
@@ -41,7 +41,7 @@ class ReportOrderSummaryCommandTest extends KernelTestCase
         $commandTester = new CommandTester($command);
 
         $source = $kernel->getProjectDir() . '/tests/Fixtures/dummy.json';
-        $destinationPath = "output.csv";
+        $destinationPath = $kernel->getCacheDir() . "/output.csv";
 
         $commandTester->execute([
             'source' => $source,
@@ -62,7 +62,7 @@ class ReportOrderSummaryCommandTest extends KernelTestCase
         $commandTester = new CommandTester($command);
 
         $source = $kernel->getProjectDir() . '/tests/Fixtures/dummy.jsonl';
-        $destinationPath = "output.csv";
+        $destinationPath = $kernel->getCacheDir() . "output.csv";
 
         $commandTester->execute([
             'source' => $source,
@@ -72,5 +72,28 @@ class ReportOrderSummaryCommandTest extends KernelTestCase
 
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString("not supported", $output);
+    }
+
+    public function testExecuteWithEmptyItems()
+    {
+        $kernel = static::createKernel();
+        $application = new Application($kernel);
+
+        $command = $application->find('report:order-summary');
+        $commandTester = new CommandTester($command);
+
+        $source = $kernel->getProjectDir() . '/tests/Fixtures/dummy2.jsonl';
+        $destinationPath = $kernel->getCacheDir() . "/output2.csv";
+
+        $commandTester->execute([
+            'source' => $source,
+            'result' => $destinationPath,
+            'type' => 'csv'
+        ]);
+        var_dump($commandTester->getDisplay());
+        $content = file_get_contents($destinationPath);
+        $this->assertStringNotContainsString("1001", $content);
+        $this->assertStringNotContainsString("1002", $content);
+        $this->assertStringContainsString("1003", $content);
     }
 }

@@ -12,17 +12,18 @@ class OrderMapper
         $order = new Order();
         self::mapOrderBasicDetails($order, $source);
         self::mapCustomer($source["customer"], $order);
+        $items = [];
 
         if ($source["items"] != null && count($source["items"]) > 0) {
-            $items = [];
             foreach($source["items"] as $item) {
                 $lineItem = new OrderLineItem();
                 ItemMapper::mapFromArray($lineItem, $item);
                 $items[] = $lineItem;
             }
 
-            $order->setItems($items);
         }
+        $order->setItems($items);
+
         return $order;
     }
 
