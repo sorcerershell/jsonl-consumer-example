@@ -4,38 +4,49 @@ namespace App\Report\OrderSummary;
 
 use App\Report\OrderSummary\Mapper\OrderMapper;
 use App\Report\OrderSummary\Mapper\OrderSummaryMapper;
-use App\Report\OrderSummary\Processor\OrderSummaryPipeline;
+use App\Report\OrderSummary\Processor\ReportPipeline;
 use App\Report\OrderSummary\Reader\JSON\OrderStreamReader;
+use App\Report\OrderSummary\Writer\CSV\CSVReportWriter;
+use App\Report\OrderSummary\Writer\ReportWriter;
 use League\Csv\Writer;
 
 class OrderSummaryService
 {
-    private OrderSummaryPipeline $orderSummaryPipeline;
+    private ReportPipeline $orderSummaryPipeline;
     private OrderStreamReader $jsonReader;
+    private ReportWriter $reportWriter;
 
     /**
-     * @param OrderSummaryPipeline $orderSummaryPipeline
+     * @param ReportPipeline $orderSummaryPipeline
      * @param OrderStreamReader $jsonReader
      */
-    public function __construct(OrderSummaryPipeline $orderSummaryPipeline, OrderStreamReader $jsonReader)
+    public function __construct(ReportPipeline $orderSummaryPipeline, OrderStreamReader $jsonReader, ReportWriter $writer)
     {
         $this->orderSummaryPipeline = $orderSummaryPipeline;
         $this->jsonReader = $jsonReader;
+        $this->reportWriter = $writer;
     }
 
 
     /**
      * @throws \Exception
      */
-    public function generate(string $uri, string $outputPath)
+    public function generate(string $uri, string $outputPath, string $type)
     {
-        $writer = Writer::createFromPath($outputPath, "w+");
-        $this->jsonReader->parse($uri, function (array $item) use (&$items, $writer) {
-            $order = OrderMapper::mapFromArray($item);
-            $summary = $this->orderSummaryPipeline->run($order);
-            $csvRow = OrderSummaryMapper::mapToCSVArray($summary);
-            $writer->insertOne($csvRow);
+        $this->jsonReader->parse($uri, function (array $item) use (&$items, $outputPath, $type) {
+            $summary = $this->processLine($item);
+            $this->reportWriter->write($summary, $outputPath, $type);
         });
+    }
+
+    /**
+     * @param array $item
+     * @return Model\OrderSummary
+     */
+    private function processLine(array $item): Model\OrderSummary
+    {
+        $order = OrderMapper::mapFromArray($item);
+        return $this->orderSummaryPipeline->run($order);
     }
 
 

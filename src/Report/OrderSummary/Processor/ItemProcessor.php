@@ -6,7 +6,7 @@ use App\Model\Order;
 use App\Model\OrderLineItem;
 use App\Report\OrderSummary\Model\OrderSummary;
 
-class ItemProcessor implements OrderSummaryProcessor
+class ItemProcessor implements ReportProcessorContract
 {
     /**
      * @param OrderSummary $summary

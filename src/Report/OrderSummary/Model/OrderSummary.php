@@ -9,6 +9,8 @@ final class OrderSummary
     private float $averageUnitPrice;
     private int $distinctUnitCount;
     private int $totalUnitsCount;
+    private string $customerState;
+
 
     public function __construct()
     {
@@ -18,6 +20,7 @@ final class OrderSummary
         $this->averageUnitPrice = 0.0;
         $this->distinctUnitCount = 0;
         $this->totalUnitsCount = 0;
+        $this->customerState = "";
     }
 
     /**
@@ -145,7 +148,7 @@ final class OrderSummary
         $this->customerState = $customerState;
         return $this;
     }
-    private string $customerState;
+
 
     
 

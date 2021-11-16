@@ -7,10 +7,10 @@ use App\Model\OrderLineItem;
 use App\Model\Product;
 use App\Report\OrderSummary\Processor\ItemProcessor;
 use App\Report\OrderSummary\Processor\OrderDetailsProcessor;
-use App\Report\OrderSummary\Processor\OrderSummaryPipeline;
+use App\Report\OrderSummary\Processor\ReportPipeline;
 use PHPUnit\Framework\TestCase;
 
-class OrderSummaryPipelineTest extends TestCase
+class ReportPipelineTest extends TestCase
 {
 
     public function testRun()
@@ -31,7 +31,7 @@ class OrderSummaryPipelineTest extends TestCase
             new ItemProcessor(),
         ];
 
-        $sut = new OrderSummaryPipeline(...$processors);
+        $sut = new ReportPipeline(...$processors);
         $summary = $sut->run($order);
 
         $this->assertEquals($order->getOrderId(), $summary->getOrderId());

@@ -35,6 +35,9 @@
     "nikic/php-parser": {
         "version": "v4.13.1"
     },
+    "opencage/geocode": {
+        "version": "v3.1.0"
+    },
     "phar-io/manifest": {
         "version": "2.0.3"
     },
@@ -150,6 +153,9 @@
     },
     "sebastian/version": {
         "version": "3.0.2"
+    },
+    "spatie/enum": {
+        "version": "3.10.0"
     },
     "symfony/browser-kit": {
         "version": "v5.3.4"

@@ -5,7 +5,7 @@ namespace App\Report\OrderSummary\Reader\JSON;
 use App\Model\Order;
 use App\Report\OrderSummary\Mapper\OrderMapper;
 use App\Report\OrderSummary\Processor;
-use App\Report\OrderSummary\Processor\OrderSummaryPipeline;
+use App\Report\OrderSummary\Processor\ReportPipeline;
 use JsonCollectionParser\Parser;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 

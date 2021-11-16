@@ -5,17 +5,17 @@ namespace App\Report\OrderSummary\Processor;
 use App\Model\Order;
 use App\Report\OrderSummary\Model\OrderSummary;
 
-class OrderSummaryPipeline
+class ReportPipeline
 {
     /**
-     * @var OrderSummaryProcessor[]
+     * @var ReportProcessorContract[]
      */
     private array $processors;
 
     /**
-     * @param OrderSummaryProcessor ...$processors
+     * @param ReportProcessorContract ...$processors
      */
-    public function __construct(OrderSummaryProcessor ...$processors)
+    public function __construct(ReportProcessorContract ...$processors)
     {
         $this->processors = $processors;
     }

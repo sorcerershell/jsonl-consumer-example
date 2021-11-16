@@ -20,10 +20,15 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
-    App\Report\OrderSummary\Processor\OrderSummaryPipeline:
+
+
+    App\Report\OrderSummary\Processor\ReportPipeline:
         arguments:
             - '@App\Report\OrderSummary\Processor\ItemProcessor'
             - '@App\Report\OrderSummary\Processor\OrderDetailsProcessor'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Report\OrderSummary\Writer\ReportWriter:
+        arguments:
+            - '@App\Report\OrderSummary\Writer\CSV\CSVReportWriter'
+            - '@App\Report\OrderSummary\Writer\JSONL\JSONLReportWriter'
+

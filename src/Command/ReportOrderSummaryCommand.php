@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Report\OrderSummary\OrderSummaryService;
-use App\Report\OrderSummary\Processor\OrderSummaryPipeline;
+use App\Report\OrderSummary\Processor\ReportPipeline;
 use App\Report\OrderSummary\Reader\JSON\OrderStreamReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -26,7 +26,8 @@ class ReportOrderSummaryCommand extends Command
     protected function configure()
     {
         $this->addArgument("source", InputArgument::REQUIRED, "path or url to dumped order json-line file");
-        $this->addArgument("result", InputArgument::REQUIRED, "path where csv will be generated");
+        $this->addArgument("result", InputArgument::REQUIRED, "path where order summary will be generated");
+        $this->addArgument("type", InputArgument::REQUIRED, "output file type");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -34,10 +35,15 @@ class ReportOrderSummaryCommand extends Command
         $sourcePath = $input->getArgument("source");
         $resultPath = $input->getArgument("result");
 
+        $type = $input->getArgument("type");
+
         try {
-            $this->summaryService->generate($sourcePath, $resultPath);
+            $output->writeln("generating order summary...");
+            $this->summaryService->generate($sourcePath, $resultPath, $type);
         } catch (ResourceNotFoundException $e) {
             $output->writeln("resource or file not found");
+        } catch (\Exception $e) {
+            $output->writeln("error:" . $e->getMessage());
         }
 
         return Command::SUCCESS;
